@@ -7,6 +7,7 @@ public class GenImpl implements Generateur {
 
     private Integer value = 0;
     private List<ObserverGenerateurAsync> obs = new ArrayList<ObserverGenerateurAsync>();
+    private AlgoDiffusion diffusion;
 
     @Override
     public Integer getValue() {
@@ -16,15 +17,8 @@ public class GenImpl implements Generateur {
 
     @Override
     public void notifyObserver() {
-        for(ObserverGenerateurAsync o:obs) {
-            try {
-                o.update(this).get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-        }
+        diffusion.configure(obs, this);
+        diffusion.execute();
     }
 
     @Override
