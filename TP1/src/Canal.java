@@ -6,7 +6,7 @@ public class Canal implements GenerateurAsync, ObserverGenerateurAsync{
 
     Generateur gen;
 
-    private List<ObserverGenerateur> obs = new ArrayList<ObserverGenerateur>();
+    private ObserverGenerateur obs;
 
     public Canal(Generateur gen) {
         this.gen = gen;
@@ -18,21 +18,14 @@ public class Canal implements GenerateurAsync, ObserverGenerateurAsync{
     }
 
     @Override
-    public void notifyObserver() {
-        for(ObserverGenerateur o:obs){
-            o.update(this);
-        }
-    }
-
-    @Override
     public void addObserver(ObserverGenerateur o) {
-        obs.add(o);
+        obs = o;
     }
 
     @Override
     public Future<Void> update(Generateur sub) {
         return Executors.newScheduledThreadPool(1).schedule(() -> {
-            notifyObserver();
+            obs.update(this);
             return null;
         }, 0, TimeUnit.MILLISECONDS);
     }
