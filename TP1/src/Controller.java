@@ -87,7 +87,7 @@ public class Controller  implements Initializable{
     }
 
     private void launchGeneration() {
-        if (threadPoolExecutor.isShutdown()) {
+        if (threadPoolExecutor == null || threadPoolExecutor.isShutdown()) {
             threadPoolExecutor = Executors.newScheduledThreadPool(1);
             threadPoolExecutor.scheduleAtFixedRate(() -> {
                 gen.generate();
