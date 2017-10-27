@@ -8,6 +8,9 @@ import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Controller  implements Initializable{
 
@@ -28,33 +31,39 @@ public class Controller  implements Initializable{
 
     @FXML
     private Button start;
+    @FXML
+    private Button stop;
 
     private Generateur gen;
 
     private Afficheur afficheur;
 
-    private AlgoDiffusion atomique;
+    private AlgoDiffusion atomic;
 
     private AlgoDiffusion sequential;
+
+    private ScheduledExecutorService threadPoolExecutor;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        aff1 = new Label();
-        Generateur gen = new GenImpl();
-        atomique = new DiffusionAtomique();
+        gen = new GenImpl();
+        atomic = new DiffusionAtomique();
         sequential = new DiffusionSequentielle();
-        atomicRadio.setSelected(true);
         afficheur = new Afficheur();
         Canal canal = new Canal(gen);
         canal.addObserver(afficheur);
         gen.addObserver(canal);
-        gen.setDiffusion(atomique);
+        gen.setDiffusion(atomic);
+
+        atomicRadio.setSelected(true);
+
 
         atomicRadio.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 if(!atomicRadio.isSelected()) {
                     sequentialRadio.setSelected(false);
-                    gen.setDiffusion(atomique);
+                    gen.setDiffusion(atomic);
                 }
             }
         });
@@ -68,11 +77,26 @@ public class Controller  implements Initializable{
             }
             });
 
-        start.setOnMouseClicked(event -> gen.generate());
+        start.setOnMouseClicked(event -> launchGeneration());
+        stop.setOnMouseClicked(event -> stopGeneration());
 
 
 
 
+
+    }
+
+    private void launchGeneration() {
+        if (threadPoolExecutor.isShutdown()) {
+            threadPoolExecutor = Executors.newScheduledThreadPool(1);
+            threadPoolExecutor.scheduleAtFixedRate(() -> {
+                gen.generate();
+            }, 0, 1000, TimeUnit.MILLISECONDS);
+        }
+    }
+
+    private void stopGeneration(){
+        if(!threadPoolExecutor.isShutdown()) threadPoolExecutor.shutdown();
 
     }
 }

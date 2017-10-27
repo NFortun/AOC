@@ -27,6 +27,6 @@ public class Canal implements GenerateurAsync, ObserverGenerateurAsync{
         return Executors.newScheduledThreadPool(1).schedule(() -> {
             obs.update(this);
             return null;
-        }, 0, TimeUnit.MILLISECONDS);
+        }, 1000, TimeUnit.MILLISECONDS);
     }
 }
