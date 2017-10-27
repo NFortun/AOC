@@ -4,7 +4,6 @@ import java.util.concurrent.ExecutionException;
 public class DiffusionAtomique implements AlgoDiffusion{
     private List<ObserverGenerateurAsync> observers;
     private  Generateur gen;
-    private int value = 0;
 
     @Override
     public void configure(List<ObserverGenerateurAsync> list, Generateur gen) {

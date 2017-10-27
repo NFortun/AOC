@@ -32,4 +32,9 @@ public class GenImpl implements Generateur {
     public void addObserver(ObserverGenerateurAsync o) {
         obs.add(o);
     }
+
+    @Override
+    public void setDiffusion(AlgoDiffusion algoDiffusion){
+        this.diffusion = algoDiffusion;
+    }
 }

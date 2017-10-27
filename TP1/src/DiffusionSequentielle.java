@@ -1,5 +1,4 @@
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class DiffusionSequentielle implements AlgoDiffusion{
     private List<ObserverGenerateurAsync> observers;
