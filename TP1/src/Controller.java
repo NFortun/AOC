@@ -58,24 +58,8 @@ public class Controller  implements Initializable{
         atomicRadio.setSelected(true);
 
 
-        atomicRadio.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if(!atomicRadio.isSelected()) {
-                    sequentialRadio.setSelected(false);
-                    gen.setDiffusion(atomic);
-                }
-            }
-        });
-        sequentialRadio.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if(sequentialRadio.isSelected()) {
-                    atomicRadio.setSelected(false);
-                    gen.setDiffusion(sequential);
-                }
-            }
-            });
+        atomicRadio.setOnMouseClicked(event -> select(atomicRadio, sequentialRadio, gen, atomic));
+        sequentialRadio.setOnMouseClicked(event -> select(sequentialRadio, atomicRadio, gen, sequential));
 
         start.setOnMouseClicked(event -> launchGeneration());
         stop.setOnMouseClicked(event -> stopGeneration());
@@ -96,7 +80,16 @@ public class Controller  implements Initializable{
     }
 
     private void stopGeneration(){
-        if(!threadPoolExecutor.isShutdown()) threadPoolExecutor.shutdown();
+        if(threadPoolExecutor != null && !threadPoolExecutor.isShutdown()) threadPoolExecutor.shutdown();
+
+    }
+
+    private void select(RadioButton selectedRadio, RadioButton diselectRadio, Generateur gen, AlgoDiffusion diffusion){
+        if(threadPoolExecutor == null || threadPoolExecutor.isShutdown()) {
+            selectedRadio.setSelected(true);
+            diselectRadio.setSelected(false);
+            gen.setDiffusion(diffusion);
+        }
 
     }
 }
