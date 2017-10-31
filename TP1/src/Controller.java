@@ -1,3 +1,8 @@
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -6,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -66,23 +72,32 @@ public class Controller  implements Initializable{
         canal1 = new Canal(gen);
         canal1.addObserver(aff1);
         gen.addObserver(canal1);
-        lab1.textProperty().bind(aff1.getValue().asString());
 
-//        aff2 = new Afficheur();
-//        canal2 = new Canal(gen);
-//        canal2.addObserver(aff2);
-//        gen.addObserver(canal2);
-//
-//        aff3 = new Afficheur();
-//        canal3 = new Canal(gen);
-//        canal3.addObserver(aff3);
-//        gen.addObserver(canal3);
-//
-//        aff4 = new Afficheur();
-//        canal4 = new Canal(gen);
-//        canal4.addObserver(aff4);
-//        gen.addObserver(canal4);
+        aff2 = new Afficheur();
+        canal2 = new Canal(gen);
+        canal2.addObserver(aff2);
+        gen.addObserver(canal2);
 
+        aff3 = new Afficheur();
+        canal3 = new Canal(gen);
+        canal3.addObserver(aff3);
+        gen.addObserver(canal3);
+
+        aff4 = new Afficheur();
+        canal4 = new Canal(gen);
+        canal4.addObserver(aff4);
+        gen.addObserver(canal4);
+
+        Timeline fiveSecondsWonder = new Timeline(new KeyFrame(Duration.millis(100),
+                event -> {
+                    lab1.setText(aff1.getValue().toString());
+                    lab2.setText(aff2.getValue().toString());
+                    lab3.setText(aff3.getValue().toString());
+                    lab4.setText(aff4.getValue().toString());
+                }
+        ));
+        fiveSecondsWonder.setCycleCount(Timeline.INDEFINITE);
+        fiveSecondsWonder.play();
 
         //group les radio buttons
         ToggleGroup group = new ToggleGroup();
@@ -102,9 +117,9 @@ public class Controller  implements Initializable{
     private void launchGeneration() {
         if (!running/*threadPoolExecutor == null || threadPoolExecutor.isShutdown()*/) {
             threadPoolExecutor = Executors.newScheduledThreadPool(1);
-            threadPoolExecutor.scheduleAtFixedRate(() -> {
-                gen.generate();
-            }, 0, 1000, TimeUnit.MILLISECONDS);
+            threadPoolExecutor.scheduleAtFixedRate(
+                    () -> gen.generate()
+                    , 0, 1000, TimeUnit.MILLISECONDS);
             running = true;
             atomicRadio.setDisable(true);
             sequentialRadio.setDisable(true);
@@ -127,7 +142,7 @@ public class Controller  implements Initializable{
 
     }
 
-    public void shutdown(){
+    void shutdown(){
         if(threadPoolExecutor != null) {
             if(!threadPoolExecutor.isShutdown()) threadPoolExecutor.shutdown();
             try {
@@ -136,6 +151,9 @@ public class Controller  implements Initializable{
                 e.printStackTrace();
             }
             canal1.shutdown();
+            canal2.shutdown();
+            canal3.shutdown();
+            canal4.shutdown();
         }
     }
 }

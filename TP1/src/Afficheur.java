@@ -10,23 +10,23 @@ import java.util.concurrent.ExecutionException;
 
 public class Afficheur implements ObserverGenerateur{
 
-    private IntegerProperty value = new SimpleIntegerProperty(0);
+    private Integer value = 0;
 
     @Override
     public void update(GenerateurAsync sub) {
-        Integer up = 0;
         try {
-            up = sub.getValue().get();
-            System.out.println(up);
+            value = sub.getValue().get();
+            System.out.println(value);
         } catch (InterruptedException e) {
+            System.err.println("Interruption");
             e.printStackTrace();
         } catch (ExecutionException e) {
+            System.err.println("Erreur à l'exécution");
             e.printStackTrace();
         }
-        value.setValue(up);
     }
 
-    public IntegerProperty getValue() {
+    Integer getValue() {
         return value;
     }
 }
