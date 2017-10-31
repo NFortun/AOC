@@ -4,6 +4,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import static javafx.application.Platform.exit;
+
 public class Main extends Application {
 
     @Override
@@ -16,7 +18,14 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.show();
     }
-//
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        exit();
+    }
+
+    //
 //    public static void main(String[] args){
 //        GenImpl g = new GenImpl();
 //
