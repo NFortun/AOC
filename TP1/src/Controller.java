@@ -4,6 +4,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
@@ -55,6 +56,10 @@ public class Controller  implements Initializable{
         gen.addObserver(canal);
         gen.setDiffusion(atomic);
 
+        //group les radio buttons
+        ToggleGroup group = new ToggleGroup();
+        atomicRadio.setToggleGroup(group);
+        sequentialRadio.setToggleGroup(group);
         atomicRadio.setSelected(true);
 
 
@@ -86,8 +91,8 @@ public class Controller  implements Initializable{
 
     private void select(RadioButton selectedRadio, RadioButton diselectRadio, Generateur gen, AlgoDiffusion diffusion){
         if(threadPoolExecutor == null || threadPoolExecutor.isShutdown()) {
-            selectedRadio.setSelected(true);
-            diselectRadio.setSelected(false);
+//            selectedRadio.setSelected(true);
+//            diselectRadio.setSelected(false);
             gen.setDiffusion(diffusion);
         }
 
