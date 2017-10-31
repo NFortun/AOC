@@ -16,17 +16,16 @@ import java.util.concurrent.TimeUnit;
 public class Controller  implements Initializable{
 
     @FXML
-    private Label aff1;
+    private Label lab1;
     @FXML
-    private Label aff2;
+    private Label lab2;
     @FXML
-    private Label aff3;
+    private Label lab3;
     @FXML
-    private Label aff4;
+    private Label lab4;
 
     @FXML
     private RadioButton atomicRadio;
-
     @FXML
     private RadioButton sequentialRadio;
 
@@ -35,14 +34,14 @@ public class Controller  implements Initializable{
     @FXML
     private Button stop;
 
+    private Afficheur aff1;
+    private Afficheur aff2;
+    private Afficheur aff3;
+    private Afficheur aff4;
+
     private Generateur gen;
-
-    private Afficheur afficheur;
-
     private AlgoDiffusion atomic;
-
     private AlgoDiffusion sequential;
-
     private ScheduledExecutorService threadPoolExecutor;
 
     private boolean running;
@@ -54,12 +53,30 @@ public class Controller  implements Initializable{
         gen = new GenImpl();
         atomic = new DiffusionAtomique();
         sequential = new DiffusionSequentielle();
-        afficheur = new Afficheur();
-        Canal canal = new Canal(gen);
-        canal.addObserver(afficheur);
-        gen.addObserver(canal);
         gen.setDiffusion(atomic);
         running = false;
+
+        //Linkage des afficheurs
+        aff1 = new Afficheur();
+        Canal canal1 = new Canal(gen);
+        canal1.addObserver(aff1);
+        gen.addObserver(canal1);
+
+//        aff2 = new Afficheur();
+//        Canal canal2 = new Canal(gen);
+//        canal2.addObserver(aff2);
+//        gen.addObserver(canal2);
+//
+//        aff3 = new Afficheur();
+//        Canal canal3 = new Canal(gen);
+//        canal3.addObserver(aff3);
+//        gen.addObserver(canal3);
+//
+//        aff4 = new Afficheur();
+//        Canal canal4 = new Canal(gen);
+//        canal4.addObserver(aff4);
+//        gen.addObserver(canal4);
+
 
         //group les radio buttons
         ToggleGroup group = new ToggleGroup();
