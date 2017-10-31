@@ -39,6 +39,11 @@ public class Controller  implements Initializable{
     private Afficheur aff3;
     private Afficheur aff4;
 
+    private Canal canal1;
+    private Canal canal2;
+    private Canal canal3;
+    private Canal canal4;
+
     private Generateur gen;
     private AlgoDiffusion atomic;
     private AlgoDiffusion sequential;
@@ -58,22 +63,23 @@ public class Controller  implements Initializable{
 
         //Linkage des afficheurs
         aff1 = new Afficheur();
-        Canal canal1 = new Canal(gen);
+        canal1 = new Canal(gen);
         canal1.addObserver(aff1);
         gen.addObserver(canal1);
+        lab1.textProperty().bind(aff1.getValue().asString());
 
 //        aff2 = new Afficheur();
-//        Canal canal2 = new Canal(gen);
+//        canal2 = new Canal(gen);
 //        canal2.addObserver(aff2);
 //        gen.addObserver(canal2);
 //
 //        aff3 = new Afficheur();
-//        Canal canal3 = new Canal(gen);
+//        canal3 = new Canal(gen);
 //        canal3.addObserver(aff3);
 //        gen.addObserver(canal3);
 //
 //        aff4 = new Afficheur();
-//        Canal canal4 = new Canal(gen);
+//        canal4 = new Canal(gen);
 //        canal4.addObserver(aff4);
 //        gen.addObserver(canal4);
 
@@ -90,10 +96,6 @@ public class Controller  implements Initializable{
 
         start.setOnMouseClicked(event -> launchGeneration());
         stop.setOnMouseClicked(event -> stopGeneration());
-
-
-
-
 
     }
 
@@ -123,5 +125,17 @@ public class Controller  implements Initializable{
             gen.setDiffusion(diffusion);
         }
 
+    }
+
+    public void shutdown(){
+        if(threadPoolExecutor != null) {
+            if(!threadPoolExecutor.isShutdown()) threadPoolExecutor.shutdown();
+            try {
+                threadPoolExecutor.awaitTermination(1000,TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            canal1.shutdown();
+        }
     }
 }

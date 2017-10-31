@@ -4,17 +4,21 @@ import java.util.concurrent.*;
 
 public class Canal implements GenerateurAsync, ObserverGenerateurAsync{
 
-    Generateur gen;
+    private Generateur gen;
 
     private ObserverGenerateur obs;
 
-    public Canal(Generateur gen) {
+    private ScheduledExecutorService getval;
+    private ScheduledExecutorService upd;
+
+    Canal(Generateur gen) {
         this.gen = gen;
     }
 
     @Override
     public Future<Integer> getValue() {
-        return Executors.newScheduledThreadPool(1).schedule(()->gen.getValue(), 1000, TimeUnit.MILLISECONDS);
+        if(getval == null) getval = Executors.newScheduledThreadPool(1);
+        return getval.schedule(()->gen.getValue(), 1000, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -24,9 +28,15 @@ public class Canal implements GenerateurAsync, ObserverGenerateurAsync{
 
     @Override
     public Future<Void> update(Generateur sub) {
-        return Executors.newScheduledThreadPool(1).schedule(() -> {
+        if(upd == null) upd = Executors.newScheduledThreadPool(1);
+        return upd.schedule(() -> {
             obs.update(this);
             return null;
         }, 1000, TimeUnit.MILLISECONDS);
+    }
+
+    public void shutdown(){
+        if(getval != null) getval.shutdown();
+        if(upd != null) upd.shutdown();
     }
 }
