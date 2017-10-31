@@ -45,8 +45,12 @@ public class Controller  implements Initializable{
 
     private ScheduledExecutorService threadPoolExecutor;
 
+    private boolean running;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        //Initialisation
         gen = new GenImpl();
         atomic = new DiffusionAtomique();
         sequential = new DiffusionSequentielle();
@@ -55,6 +59,7 @@ public class Controller  implements Initializable{
         canal.addObserver(afficheur);
         gen.addObserver(canal);
         gen.setDiffusion(atomic);
+        running = false;
 
         //group les radio buttons
         ToggleGroup group = new ToggleGroup();
@@ -76,23 +81,28 @@ public class Controller  implements Initializable{
     }
 
     private void launchGeneration() {
-        if (threadPoolExecutor == null || threadPoolExecutor.isShutdown()) {
+        if (!running/*threadPoolExecutor == null || threadPoolExecutor.isShutdown()*/) {
             threadPoolExecutor = Executors.newScheduledThreadPool(1);
             threadPoolExecutor.scheduleAtFixedRate(() -> {
                 gen.generate();
             }, 0, 1000, TimeUnit.MILLISECONDS);
+            running = true;
+            atomicRadio.setDisable(true);
+            sequentialRadio.setDisable(true);
         }
     }
 
     private void stopGeneration(){
-        if(threadPoolExecutor != null && !threadPoolExecutor.isShutdown()) threadPoolExecutor.shutdown();
-
+        if(running/*threadPoolExecutor != null && !threadPoolExecutor.isShutdown()*/) {
+            threadPoolExecutor.shutdown();
+            running = false;
+            atomicRadio.setDisable(false);
+            sequentialRadio.setDisable(false);
+        }
     }
 
     private void select(RadioButton selectedRadio, RadioButton diselectRadio, Generateur gen, AlgoDiffusion diffusion){
         if(threadPoolExecutor == null || threadPoolExecutor.isShutdown()) {
-//            selectedRadio.setSelected(true);
-//            diselectRadio.setSelected(false);
             gen.setDiffusion(diffusion);
         }
 
