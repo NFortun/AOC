@@ -12,6 +12,8 @@ public class Canal implements GenerateurAsync, ObserverGenerateurAsync{
     private ScheduledExecutorService getval;
     private ScheduledExecutorService upd;
 
+    private Random rand = new Random();
+
     Canal(Generateur gen) {
         this.gen = gen;
     }
@@ -19,7 +21,7 @@ public class Canal implements GenerateurAsync, ObserverGenerateurAsync{
     @Override
     public Future<Integer> getValue() {
         if(getval == null) getval = Executors.newScheduledThreadPool(1);
-        return getval.schedule(()->gen.getValue(), (new Random()).nextInt() % 5000, TimeUnit.MILLISECONDS);
+        return getval.schedule(()->gen.getValue(), rand.nextInt() % 5000, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -33,10 +35,10 @@ public class Canal implements GenerateurAsync, ObserverGenerateurAsync{
         return upd.schedule(() -> {
             obs.update(this);
             return null;
-        }, (new Random()).nextInt() % 5000, TimeUnit.MILLISECONDS);
+        }, rand.nextInt() % 5000, TimeUnit.MILLISECONDS);
     }
 
-    public void shutdown(){
+    void shutdown(){
         if(getval != null) getval.shutdown();
         if(upd != null) upd.shutdown();
     }
