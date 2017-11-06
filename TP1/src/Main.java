@@ -17,7 +17,7 @@ public class Main extends Application {
 
         Scene scene = new Scene(root);
 
-        stage.setTitle("FXML Welcome");
+        stage.setTitle("My wonderful generator");
         stage.setScene(scene);
         stage.setOnCloseRequest(e->controller.shutdown());
         stage.show();
