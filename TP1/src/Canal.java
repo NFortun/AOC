@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.*;
 
 public class Canal implements GenerateurAsync, ObserverGenerateurAsync{
@@ -18,7 +19,7 @@ public class Canal implements GenerateurAsync, ObserverGenerateurAsync{
     @Override
     public Future<Integer> getValue() {
         if(getval == null) getval = Executors.newScheduledThreadPool(1);
-        return getval.schedule(()->gen.getValue(), 1000, TimeUnit.MILLISECONDS);
+        return getval.schedule(()->gen.getValue(), (new Random()).nextInt() % 5000, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -32,7 +33,7 @@ public class Canal implements GenerateurAsync, ObserverGenerateurAsync{
         return upd.schedule(() -> {
             obs.update(this);
             return null;
-        }, 1000, TimeUnit.MILLISECONDS);
+        }, (new Random()).nextInt() % 5000, TimeUnit.MILLISECONDS);
     }
 
     public void shutdown(){
