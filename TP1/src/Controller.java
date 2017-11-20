@@ -68,37 +68,32 @@ public class Controller  implements Initializable{
         running = false;
 
         //Linkage des afficheurs
-        aff1 = new Afficheur();
-        canal1 = new Canal(gen);
+        aff1 = new Afficheur(lab1);
+        canal1 = new Canal(gen, 0);
         canal1.addObserver(aff1);
         gen.addObserver(canal1);
 
-        aff2 = new Afficheur();
-        canal2 = new Canal(gen);
+        aff2 = new Afficheur(lab2);
+        canal2 = new Canal(gen, 100);
         canal2.addObserver(aff2);
         gen.addObserver(canal2);
 
-        aff3 = new Afficheur();
-        canal3 = new Canal(gen);
+        aff3 = new Afficheur(lab3);
+        canal3 = new Canal(gen, 500);
         canal3.addObserver(aff3);
         gen.addObserver(canal3);
 
-        aff4 = new Afficheur();
-        canal4 = new Canal(gen);
+        aff4 = new Afficheur(lab4);
+        canal4 = new Canal(gen, 1000);
         canal4.addObserver(aff4);
         gen.addObserver(canal4);
 
-        Timeline fiveSecondsWonder = new Timeline(new KeyFrame(Duration.millis(100),
-                event -> {
-                    lab1.setText(aff1.getValue().toString());
-                    lab2.setText(aff2.getValue().toString());
-                    lab3.setText(aff3.getValue().toString());
-                    lab4.setText(aff4.getValue().toString());
-                }
-        ));
-        fiveSecondsWonder.setCycleCount(Timeline.INDEFINITE);
-        fiveSecondsWonder.play();
 
+
+//        lab1.textProperty().bind(aff1.getValue().asString());
+//        lab2.textProperty().bind(aff2.getValue().asString());
+//        lab3.textProperty().bind(aff3.getValue().asString());
+//        lab4.textProperty().bind(aff4.getValue().asString());
         //group les radio buttons
         ToggleGroup group = new ToggleGroup();
         atomicRadio.setToggleGroup(group);
@@ -106,8 +101,8 @@ public class Controller  implements Initializable{
         atomicRadio.setSelected(true);
 
 
-        atomicRadio.setOnMouseClicked(event -> select(atomicRadio, sequentialRadio, gen, atomic));
-        sequentialRadio.setOnMouseClicked(event -> select(sequentialRadio, atomicRadio, gen, sequential));
+        atomicRadio.setOnMouseClicked(event -> select(gen, atomic));
+        sequentialRadio.setOnMouseClicked(event -> select(gen, sequential));
 
         start.setOnMouseClicked(event -> launchGeneration());
         stop.setOnMouseClicked(event -> stopGeneration());
@@ -121,8 +116,6 @@ public class Controller  implements Initializable{
                     () -> gen.generate()
                     , 0, 1000, TimeUnit.MILLISECONDS);
             running = true;
-            atomicRadio.setDisable(true);
-            sequentialRadio.setDisable(true);
         }
     }
 
@@ -130,21 +123,18 @@ public class Controller  implements Initializable{
         if(running/*threadPoolExecutor != null && !threadPoolExecutor.isShutdown()*/) {
             threadPoolExecutor.shutdown();
             running = false;
-            atomicRadio.setDisable(false);
-            sequentialRadio.setDisable(false);
         }
     }
 
-    private void select(RadioButton selectedRadio, RadioButton diselectRadio, Generateur gen, AlgoDiffusion diffusion){
-        if(threadPoolExecutor == null || threadPoolExecutor.isShutdown()) {
-            gen.setDiffusion(diffusion);
-        }
+    private void select(Generateur gen, AlgoDiffusion diffusion){
+         gen.setDiffusion(diffusion);
+
 
     }
 
     void shutdown(){
         if(threadPoolExecutor != null) {
-            if(!threadPoolExecutor.isShutdown()) threadPoolExecutor.shutdown();
+            if(!threadPoolExecutor.isShutdown()) threadPoolExecutor.shutdownNow();
             try {
                 threadPoolExecutor.awaitTermination(1000,TimeUnit.MILLISECONDS);
             } catch (InterruptedException e) {

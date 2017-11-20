@@ -17,10 +17,8 @@ public class DiffusionAtomique implements AlgoDiffusion{
         for(ObserverGenerateurAsync o: observers) {
             try {
                 o.update(gen).get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+            } catch (InterruptedException | ExecutionException ignore) {
+                ignore.printStackTrace();
             }
         }
 
