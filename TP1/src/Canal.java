@@ -18,6 +18,10 @@ public class Canal implements GenerateurAsync, ObserverGenerateurAsync{
         this.latency = latency;
     }
 
+    /**
+     * Donne la valeur du générateur en simulant l'asynchronisme
+     * @return Le Future de la valeur du générateur
+     */
     @Override
     public Future<Integer> getValue() {
         if(getval == null) getval = Executors.newScheduledThreadPool(1);
@@ -38,6 +42,9 @@ public class Canal implements GenerateurAsync, ObserverGenerateurAsync{
         }, latency, TimeUnit.MILLISECONDS);
     }
 
+    /**
+     * Met fin à l'activité des Threads
+     */
     public void shutdown(){
         if(getval != null) getval.shutdownNow();
         if(upd != null) upd.shutdownNow();

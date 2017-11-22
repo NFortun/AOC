@@ -1,3 +1,3 @@
-public interface ObserverGenerateur {
-    public void update(GenerateurAsync sub);
+interface ObserverGenerateur {
+    void update(GenerateurAsync sub);
 }

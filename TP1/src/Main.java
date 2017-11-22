@@ -4,8 +4,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import static javafx.application.Platform.exit;
-
 public class Main extends Application {
 
     @Override
@@ -13,13 +11,13 @@ public class Main extends Application {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ressources/index.fxml"));
         Parent root = loader.load();
-        Controller controller = loader.getController();
+        Controlleur controlleur = loader.getController();
 
         Scene scene = new Scene(root);
 
         stage.setTitle("My wonderful generator");
         stage.setScene(scene);
-        stage.setOnCloseRequest(e->controller.shutdown());
+        stage.setOnCloseRequest(e-> controlleur.shutdown());
         stage.show();
 
     }

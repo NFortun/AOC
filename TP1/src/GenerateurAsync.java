@@ -1,7 +1,7 @@
 import java.util.concurrent.Future;
 
-public interface GenerateurAsync {
+interface GenerateurAsync {
 
-    public Future<Integer> getValue();
-    public void addObserver(ObserverGenerateur o);
+    Future<Integer> getValue();
+    void addObserver(ObserverGenerateur o);
 }

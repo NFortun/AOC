@@ -1,7 +1,7 @@
-public interface Generateur {
-    public Integer getValue();
-    public void generate();
-    public void addObserver(ObserverGenerateurAsync o);
-    public void notifyObserver();
-    public void setDiffusion(AlgoDiffusion algoDiffusion);
+interface Generateur {
+    Integer getValue();
+    void generate();
+    void addObserver(ObserverGenerateurAsync o);
+    void notifyObserver();
+    void setDiffusion(AlgoDiffusion algoDiffusion);
 }
