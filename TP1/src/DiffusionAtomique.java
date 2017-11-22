@@ -12,6 +12,9 @@ public class DiffusionAtomique implements AlgoDiffusion{
 
     }
 
+    /**
+     * Attends de confirmer que l'update ai eu lieu
+     */
     @Override
     public void execute() {
         for(ObserverGenerateurAsync o: observers) {

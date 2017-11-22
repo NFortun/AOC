@@ -10,6 +10,9 @@ public class DiffusionSequentielle implements AlgoDiffusion{
         this.gen = gen;
     }
 
+    /**
+     * Lance l'update sans attendre
+     */
     @Override
     public void execute() {
         for(ObserverGenerateurAsync o: observers) {
